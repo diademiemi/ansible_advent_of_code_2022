@@ -1,0 +1,26 @@
+---
+- name: Split input into separate elves
+  ansible.builtin.set_fact:
+    elfs: "{{ input | split('\n\n') }}"
+
+- name: Split the calories from each elf
+  ansible.builtin.set_fact:
+    elf_calories: "{{ elf_calories | default([]) + [item | split('\n') | map('int') ] }}"
+  loop: "{{ elfs }}"
+
+- name: Add all calories of each elf together
+  ansible.builtin.set_fact:
+    elf_total_calories: "{{ elf_total_calories | default([]) + [item | sum] }}"
+  loop: "{{ elf_calories }}"
+
+- name: Return the highest total calories
+  ansible.builtin.debug:
+    msg: "{{ elf_total_calories | max }}"
+
+- name: Sort the list by size
+  ansible.builtin.set_fact:
+    sorted_elfs: "{{ elf_total_calories | sort(reverse=True) }}"
+
+- name: Return the calories of the top 3 elves
+  ansible.builtin.debug:
+    msg: "{{ [sorted_elfs[0], sorted_elfs[1], sorted_elfs[2]] | sum }}"

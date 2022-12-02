@@ -1,0 +1,29 @@
+---
+- name: Split input into all games
+  ansible.builtin.set_fact:
+    games_list: "{{ input | lower | trim | split('\n') }}"
+
+- name: Split games into the two players
+  ansible.builtin.set_fact:
+    games: "{{ games | default([]) + [item | split(' ')] }}"
+  loop: "{{ games_list }}"
+
+- name: Get results for each game with the first strategy
+  ansible.builtin.set_fact:
+    results: "{{ results | default([]) + [point_map[item.1][item.0] + shape_points[item.1]] }}"
+  loop: "{{ games }}"
+
+- name: Return the total points with the first strategy
+  ansible.builtin.debug:
+    msg: "{{ results | sum }}"
+
+- name: Get results for each game with the second strategy
+  ansible.builtin.set_fact:
+    results_2: "{{ results_2 | default([]) + [result_map[item.1] + shape_points[our_shape]] }}"
+  vars:
+    our_shape: "{% for key in point_map.keys() %}{% if result_map[item.1] == point_map[key][item.0] %}{{ key }}{% endif %}{% endfor %}"
+  loop: "{{ games }}"
+
+- name: Return the total points with the second strategy
+  ansible.builtin.debug:
+    msg: "{{ results_2 | sum }}"
