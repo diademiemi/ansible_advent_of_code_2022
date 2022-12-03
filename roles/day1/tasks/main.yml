@@ -13,14 +13,17 @@
     elf_total_calories: "{{ elf_total_calories | default([]) + [item | sum] }}"
   loop: "{{ elf_calories }}"
 
-- name: Return the highest total calories
+- name: ANSWER TO PART 1 | Return the highest total calories
+  tags: part1
   ansible.builtin.debug:
     msg: "{{ elf_total_calories | max }}"
 
 - name: Sort the list by size
+  tags: part2
   ansible.builtin.set_fact:
     sorted_elfs: "{{ elf_total_calories | sort(reverse=True) }}"
 
-- name: Return the calories of the top 3 elves
+- name: ANSWER TO PART 2 | Return the calories of the top 3 elves
+  tags: part2
   ansible.builtin.debug:
     msg: "{{ [sorted_elfs[0], sorted_elfs[1], sorted_elfs[2]] | sum }}"

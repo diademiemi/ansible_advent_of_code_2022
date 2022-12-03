@@ -9,21 +9,25 @@
   loop: "{{ games_list }}"
 
 - name: Get results for each game with the first strategy
+  tags: part1
   ansible.builtin.set_fact:
     results: "{{ results | default([]) + [point_map[item.1][item.0] + shape_points[item.1]] }}"
   loop: "{{ games }}"
 
-- name: Return the total points with the first strategy
+- name: ANSWER TO PART 1 | Return the total points with the first strategy
+  tags: part1
   ansible.builtin.debug:
     msg: "{{ results | sum }}"
 
 - name: Get results for each game with the second strategy
+  tags: part2
   ansible.builtin.set_fact:
     results_2: "{{ results_2 | default([]) + [result_map[item.1] + shape_points[our_shape]] }}"
   vars:
     our_shape: "{% for key in point_map.keys() %}{% if result_map[item.1] == point_map[key][item.0] %}{{ key }}{% endif %}{% endfor %}"
   loop: "{{ games }}"
 
-- name: Return the total points with the second strategy
+- name: ANSWER TO PART 2 | Return the total points with the second strategy
+  tags: part2
   ansible.builtin.debug:
     msg: "{{ results_2 | sum }}"
