@@ -1,0 +1,73 @@
+---
+- name: Split input into separate rucksacks
+  ansible.builtin.set_fact:
+    rucksacks: "{{ input | trim | split('\n') }}"
+
+- name: Split the rucksacks into two halves
+  tags: part1
+  ansible.builtin.set_fact:
+    rucksack_compartments: "{{ rucksack_compartments | default([]) + [[ first_half, second_half ]] }}"
+  vars:
+    half_len: "{{ (item | length | int / 2) | int }}"
+    regex_first_half: "{{ '^' + ('.' * half_len | int) }}"
+    regex_second_half: "{{ ('.' * half_len | int) + '$' }}"
+    first_half: "{{ item | regex_replace(regex_second_half, '') }}"
+    second_half: "{{ item | regex_replace(regex_first_half, '') }}"
+  loop: "{{ rucksacks }}"
+
+- name: Get character that occurs in both halves
+  tags: part1
+  ansible.builtin.set_fact:
+    rucksack_characters: "{{ rucksack_characters | default([]) + [item.0 | list | intersect(item.1 | list) | first] }}"
+  loop: "{{ rucksack_compartments }}"
+
+- name: Return the characters
+  tags: part1
+  ansible.builtin.debug:
+    msg: "{{ rucksack_characters | join('') }}"
+
+- name: Loop through all letters in the alphabet and set their priorities
+  ansible.builtin.set_fact:
+    rucksack_priorities: "{{ rucksack_priorities | default({}) | combine({ item: index + 1}) }}"
+  loop: "{{ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' | list }}"
+  loop_control:
+    index_var: index
+
+- name: Get the total priorities of all double letters
+  tags: part1
+  ansible.builtin.set_fact:
+    rucksack_total_priorities: "{{ rucksack_total_priorities | default(0) | int + rucksack_priorities[item] | int }}"
+  loop: "{{ rucksack_characters }}"
+
+- name: ANSWER TO PART 1 | Return the total priorities of all double letters
+  tags: part1
+  ansible.builtin.debug:
+    msg: "{{ rucksack_total_priorities }}"
+
+- name: Split the elves into groups of three
+  tags: part2
+  ansible.builtin.set_fact:
+    rucksack_groups: "{{ rucksack_groups | default([]) + [item] }}"
+  loop: "{{ rucksacks | list | batch(3) }}"
+
+- name: Get letter that occurs in all three elves
+  tags: part2
+  ansible.builtin.set_fact:
+    rucksack_characters: "{{ rucksack_characters | default([]) + [item.0 | list | intersect(item.1 | list) | intersect(item.2 | list) | first] }}"
+  loop: "{{ rucksack_groups }}"
+
+- name: Return the characters from each group
+  tags: part2
+  ansible.builtin.debug:
+    msg: "{{ rucksack_characters | join('') }}"
+
+- name: Get the total priorities of all triple letters
+  tags: part2
+  ansible.builtin.set_fact:
+    rucksack_total_priorities: "{{ rucksack_total_priorities | default(0) | int + rucksack_priorities[item] | int }}"
+  loop: "{{ rucksack_characters }}"
+
+- name: ANSWER TO PART 2 | Return the total priorities of all triple letters
+  tags: part2
+  ansible.builtin.debug:
+    msg: "{{ rucksack_total_priorities }}"
