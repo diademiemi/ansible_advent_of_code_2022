@@ -1,0 +1,53 @@
+---
+- name: Split input into all pairs
+  ansible.builtin.set_fact:
+    pairs: "{{ input | trim | split('\n') }}"
+
+- name: Split pairs into the two assignments
+  ansible.builtin.set_fact:
+    assignments: "{{ assignments | default([]) + [item | split(',')] }}"
+  loop: "{{ pairs }}"
+
+- name: Split assignments into the four numbers
+  ansible.builtin.set_fact:
+    assignments_ranges: "{{ assignments_ranges | default([]) + [[item.0 | split('-'), item.1 | split('-')]] }}"
+  loop: "{{ assignments }}"
+
+- name: Get all numbers contained within assignment
+  ansible.builtin.set_fact:
+    assignment_nums: "{{ assignment_nums | default([]) + [[assignment_1 | split(',') | map('int'), assignment_2 | split(',') | map('int')]] }}"
+  vars:
+    assignment_1: "{% for i in range(item[0][0] | int, item[0][1] | int + 1) %}{{ i }}{% if i | int != item[0][1] | int%},{% endif %}{% endfor %}"
+    assignment_2: "{% for i in range(item[1][0] | int, item[1][1] | int + 1) %}{{ i }}{% if i | int != item[1][1] | int%},{% endif %}{% endfor %}"
+  loop: "{{ assignments_ranges }}"
+
+- name: Add numbers to list if they fully overlap with another assignment
+  tags: part1
+  ansible.builtin.set_fact:
+    overlap: "{{ overlap | default([]) + [intersect] }}"
+  vars:
+    intersect: "{{ item.0 | intersect(item.1) }}"
+    fully_in_1: "{% if item.0 | length == item.0 | intersect(intersect) | length %}true{% else %}false{% endif %}"
+    fully_in_2: "{% if item.1 | length == item.1 | intersect(intersect) | length %}true{% else %}false{% endif %}"
+    result: "{% if fully_in_1 == 'true' or fully_in_2 == 'true' %}true{% else %}false{% endif %}"
+  when: result == 'true'
+  loop: "{{ assignment_nums }}"
+
+- name: ANSWER TO PART 1 | Get the total number of overlapping numbers
+  tags: part1
+  ansible.builtin.debug:
+    msg: "{{ overlap | length }}"
+
+- name: Add numbers to list if they overlap at all
+  tags: part2
+  ansible.builtin.set_fact:
+    overlap_2: "{{ overlap_2 | default([]) + [item] }}"
+  vars:
+    result: "{% if item.0 | intersect(item.1) | length > 0 %}true{% else %}false{% endif %}"
+  when: result == 'true'
+  loop: "{{ assignment_nums }}"
+
+- name: ANSWER TO PART 2 | Get the total number of numbers that overlap at all
+  tags: part2
+  ansible.builtin.debug:
+    msg: "{{ overlap_2 | length }}"
