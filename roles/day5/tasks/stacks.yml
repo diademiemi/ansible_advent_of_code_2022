@@ -1,0 +1,21 @@
+---
+- name: Populate stacks
+  ansible.builtin.set_fact:
+    stacks: "{{ stacks | default([]) + [[]] }}"
+  loop: "{{ box_index }}"
+
+- name: Split the stacks into their boxes
+  ansible.utils.update_fact:
+    updates:
+    - path: "stacks[{{ item.0 }}][{{ item.1 }}]"
+      value: "{{ box_rows[item.1][item.0] | default(omit) }}"
+  register: stacks
+  loop: "{{ range(0, box_index | length) | list | product(range(0, box_rows | length)) | list }}"
+
+- name: Set stacks to the last result
+  ansible.builtin.set_fact:
+    stacks: "{{ stacks.results[-1].stacks }}"
+
+- name: Clean up the stacks
+  ansible.builtin.set_fact:
+    stacks: "{{ stacks | map('reject', 'equalto', '|') | list }}"

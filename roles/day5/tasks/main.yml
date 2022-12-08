@@ -1,0 +1,78 @@
+---
+
+- name: Split input into the two parts
+  ansible.builtin.set_fact:
+    boxes_view: "{{ input | split('\n\n') | first }}"
+    procedure: "{{ input | split('\n\n') | last  }}"
+
+- name: Split procedure into instructions
+  ansible.builtin.set_fact:
+    instructions: "{{ procedure | split('\n') | reject('equalto', '') | list}}"
+
+- name: Split boxes view into boxes and instructions
+  ansible.builtin.set_fact:
+    # Boxes should be all rows except the lsat
+    boxes: "{{ boxes_view | split('\n') | json_query('[:-1]') }}"
+    indexes: "{{ boxes_view | split('\n') | last }}"
+
+- name: Get the box indexes
+  ansible.builtin.set_fact:
+    box_index: "{{ indexes | trim | split('   ') | map('int') | list }}"
+
+- name: Split boxes into arrays
+  ansible.builtin.set_fact:
+    box_rows: "{{ box_rows | default([]) + [item  | replace('    ', '[|] ') | split(']') | map('trim') | map('replace', '[', '') | list | json_query('[:-1]')] }}"
+  loop: "{{ boxes }}"
+
+- name: Create stacks
+  tags: part1
+  include_tasks: "stacks.yml"
+
+- name: Loop over all instructions
+  tags: part1
+  ansible.builtin.include_tasks: "inner.yml"
+  vars:
+    instruction_full: "{{ item }}"
+    nums: "{{ instruction | regex_findall('[0-9]+') | map('int') }}"
+    amount: "{{ nums[0] }}"
+    move_from: "{{ nums[1] | int - 1}}"
+    move_to: "{{ nums[2] | int - 1}}"
+    reverse: true
+  loop: "{{ instructions }}"
+  loop_control:
+    loop_var: instruction
+    index_var: instruction_index
+
+- name: ANSWER TO PART 1 | Get the top box of every stack
+  tags: part1
+  ansible.builtin.debug:
+    msg: "{% for i in stacks %}{{ i[0] }}{% endfor %}"
+
+- name: Reset stacks variable
+  tags: part2
+  ansible.builtin.set_fact:
+    stacks: []
+
+- name: Recreate stacks
+  tags: part2
+  include_tasks: "stacks.yml"
+
+- name: Loop over all instructions but don't reverse new boxes
+  tags: part2
+  ansible.builtin.include_tasks: "inner.yml"
+  vars:
+    instruction_full: "{{ item }}"
+    nums: "{{ instruction | regex_findall('[0-9]+') | map('int') }}"
+    amount: "{{ nums[0] }}"
+    move_from: "{{ nums[1] | int - 1}}"
+    move_to: "{{ nums[2] | int - 1}}"
+    reverse: false
+  loop: "{{ instructions }}"
+  loop_control:
+    loop_var: instruction
+    index_var: instruction_index
+
+- name: ANSWER TO PART 2 | Get the top box of every stack
+  tags: part2
+  ansible.builtin.debug:
+    msg: "{% for i in stacks %}{{ i[0] }}{% endfor %}"
