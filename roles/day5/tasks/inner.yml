@@ -11,8 +11,8 @@
       - path: "stacks[{{ move_from | int }}]"
         value: "{{ stack_from | default([]) | json_query(from_query) }}"
   vars:
-    stack_from: "{{ stacks[move_from | int ] }}"
-    stack_to: "{{ stacks[move_to | int ] }}"
+    stack_from: "{{ stacks[move_from | int] }}"
+    stack_to: "{{ stacks[move_to | int] }}"
     from_query: "[{{ amount | int }}:]"
     to_query: "[:{{ amount | int }}]"
   register: stacks
