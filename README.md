@@ -11,7 +11,7 @@ To challenge myself a bit, I decided to write these the programming language of 
 
 ## Goals
 
-I want to use keep everything within `ansible.builtin.*` modules as much as possible, and I will try to avoid using `shell` or `command` modules, since these aren't really Ansible-y. Most things will probably be done with `set_fact` with some `loop` and `when` Jinja2 fuckery.
+I want to use keep everything within `ansible.builtin.*` modules as much as possible. I will also use `ansible.utils.update_fact`, it's still in the spirit but is super useful for this. I will try to avoid using `shell` or `command` modules, since these aren't really Ansible-y. Most things will probably be done with `set_fact` with some `loop` and `when` Jinja2 fuckery. As much as possible should be done in-memory, this should just be pure Ansible irrespective of the host it's running on.
 
 ## How to run
 The Ansible code will run completely in memory on the local machine, so no need to configure hosts.  

@@ -1,0 +1,3 @@
+skip_list:
+  - yaml[trailing-spaces]
+  - yaml[line-length]

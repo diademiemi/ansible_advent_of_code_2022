@@ -21,12 +21,12 @@
 
 - name: Split boxes into arrays
   ansible.builtin.set_fact:
-    box_rows: "{{ box_rows | default([]) + [item  | replace('    ', '[|] ') | split(']') | map('trim') | map('replace', '[', '') | list | json_query('[:-1]')] }}"
+    box_rows: "{{ box_rows | default([]) + [item | replace('    ', '[|] ') | split(']') | map('trim') | map('replace', '[', '') | list | json_query('[:-1]')] }}"
   loop: "{{ boxes }}"
 
 - name: Create stacks
   tags: part1
-  include_tasks: "stacks.yml"
+  ansible.builtin.include_tasks: "stacks.yml"
 
 - name: Loop over all instructions
   tags: part1
@@ -35,8 +35,8 @@
     instruction_full: "{{ item }}"
     nums: "{{ instruction | regex_findall('[0-9]+') | map('int') }}"
     amount: "{{ nums[0] }}"
-    move_from: "{{ nums[1] | int - 1}}"
-    move_to: "{{ nums[2] | int - 1}}"
+    move_from: "{{ nums[1] | int - 1 }}"
+    move_to: "{{ nums[2] | int - 1 }}"
     reverse: true
   loop: "{{ instructions }}"
   loop_control:

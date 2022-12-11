@@ -7,8 +7,8 @@
 - name: Split the stacks into their boxes
   ansible.utils.update_fact:
     updates:
-    - path: "stacks[{{ item.0 }}][{{ item.1 }}]"
-      value: "{{ box_rows[item.1][item.0] | default(omit) }}"
+      - path: "stacks[{{ item.0 }}][{{ item.1 }}]"
+        value: "{{ box_rows[item.1][item.0] | default(omit) }}"
   register: stacks
   loop: "{{ range(0, box_index | length) | list | product(range(0, box_rows | length)) | list }}"
 
