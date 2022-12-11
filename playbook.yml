@@ -1,8 +1,10 @@
 ---
-- hosts: localhost
+- name: Advent of Code 2022
+  hosts: localhost
   roles:
     - { role: day1, tags: ['day1'] }
     - { role: day2, tags: ['day2'] }
     - { role: day3, tags: ['day3'] }
     - { role: day4, tags: ['day4'] }
     - { role: day5, tags: ['day5'] }
+    - { role: day6, tags: ['day6'] }
