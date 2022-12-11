@@ -17,8 +17,8 @@
   ansible.builtin.set_fact:
     assignment_nums: "{{ assignment_nums | default([]) + [[assignment_1 | split(',') | map('int'), assignment_2 | split(',') | map('int')]] }}"
   vars:
-    assignment_1: "{% for i in range(item[0][0] | int, item[0][1] | int + 1) %}{{ i }}{% if i | int != item[0][1] | int%},{% endif %}{% endfor %}"
-    assignment_2: "{% for i in range(item[1][0] | int, item[1][1] | int + 1) %}{{ i }}{% if i | int != item[1][1] | int%},{% endif %}{% endfor %}"
+    assignment_1: "{% for i in range(item[0][0] | int, item[0][1] | int + 1) %}{{ i }}{% if i | int != item[0][1] | int %},{% endif %}{% endfor %}"
+    assignment_2: "{% for i in range(item[1][0] | int, item[1][1] | int + 1) %}{{ i }}{% if i | int != item[1][1] | int %},{% endif %}{% endfor %}"
   loop: "{{ assignments_ranges }}"
 
 - name: Add numbers to list if they fully overlap with another assignment

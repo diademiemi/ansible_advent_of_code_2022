@@ -55,7 +55,7 @@
 
 - name: Recreate stacks
   tags: part2
-  include_tasks: "stacks.yml"
+  ansible.builtin.include_tasks: "stacks.yml"
 
 - name: Loop over all instructions but don't reverse new boxes
   tags: part2
@@ -64,8 +64,8 @@
     instruction_full: "{{ item }}"
     nums: "{{ instruction | regex_findall('[0-9]+') | map('int') }}"
     amount: "{{ nums[0] }}"
-    move_from: "{{ nums[1] | int - 1}}"
-    move_to: "{{ nums[2] | int - 1}}"
+    move_from: "{{ nums[1] | int - 1 }}"
+    move_to: "{{ nums[2] | int - 1 }}"
     reverse: false
   loop: "{{ instructions }}"
   loop_control:

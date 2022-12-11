@@ -6,7 +6,7 @@
 - name: Split the rucksacks into two halves
   tags: part1
   ansible.builtin.set_fact:
-    rucksack_compartments: "{{ rucksack_compartments | default([]) + [[ first_half, second_half ]] }}"
+    rucksack_compartments: "{{ rucksack_compartments | default([]) + [[first_half, second_half]] }}"
   vars:
     half_len: "{{ (item | length | int / 2) | int }}"
     regex_first_half: "{{ '^' + ('.' * half_len | int) }}"
@@ -28,7 +28,7 @@
 
 - name: Loop through all letters in the alphabet and set their priorities
   ansible.builtin.set_fact:
-    rucksack_priorities: "{{ rucksack_priorities | default({}) | combine({ item: index + 1}) }}"
+    rucksack_priorities: "{{ rucksack_priorities | default({}) | combine({item: index + 1}) }}"
   loop: "{{ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' | list }}"
   loop_control:
     index_var: index
