@@ -1,0 +1,31 @@
+---
+- name: Split input into rows
+  ansible.builtin.set_fact:
+    rows: "{{ input | trim | split('\n') }}"
+
+- name: Split rows into columns
+  ansible.builtin.set_fact:
+    rows: "{{ rows | map('list') }}"
+
+- name: Loop through every coordinate
+  tags: part1
+  ansible.builtin.set_fact:
+    visible_num: "{{ visible_num | default(0) | int + 1 }}"
+  when: 
+    item.0 == 0 or item.1 == 0 or
+    item.0 == rows | length - 1 or item.1 == rows[0] | length - 1 or
+    rows[item.0][item.1] | int > look_left | join(',') | map('int') | max or
+    rows[item.0][item.1] | int > look_right | join(',') | map('int') | max or
+    rows[item.0][item.1] | int > look_up | join(',') | map('int') | max or
+    rows[item.0][item.1] | int > look_down | join(',') | map('int') | max
+  vars:
+    look_left: "{% for i in range(item.1, -1, -1) %}{% if i != item.1 %}{{ rows[item.0][i] }}{% if i | int != 0 %},{% endif %}{% endif %}{% endfor %}"
+    look_right: "{% for i in range(item.1, rows[0] | length) %}{% if i != item.1 %}{{ rows[item.0][i] }}{% if i | int != rows[0] | length - 1 %},{% endif %}{% endif %}{% endfor %}"
+    look_up: "{% for i in range(item.0, -1, -1) %}{% if i != item.0 %}{{ rows[i][item.1] }}{% if i | int != 0 %},{% endif %}{% endif %}{% endfor %}"
+    look_down: "{% for i in range(item.0, rows | length) %}{% if i != item.0 %}{{ rows[i][item.1] }}{% if i | int != rows | length - 1 %},{% endif %}{% endif %}{% endfor %}"
+  loop: "{{ range(0, rows | length) | list | product(range(0, rows[0] | length)) | list }}"
+
+- name: ANSWER TO PART 1 | Return the number of visible trees
+  tags: part1
+  ansible.builtin.debug:
+    msg: "{{ visible_num }}"

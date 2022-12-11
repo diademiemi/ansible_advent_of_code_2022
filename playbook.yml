@@ -8,3 +8,4 @@
     - { role: day4, tags: ['day4'] }
     - { role: day5, tags: ['day5'] }
     - { role: day6, tags: ['day6'] }
+    - { role: day8, tags: ['day8'] }
