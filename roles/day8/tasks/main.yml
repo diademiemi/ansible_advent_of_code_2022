@@ -1,7 +1,7 @@
 ---
 - name: Split input into rows
   ansible.builtin.set_fact:
-    rows: "{{ input | trim | split('\n') }}"
+    rows: "{{ day8_input | trim | split('\n') }}"
 
 - name: Split rows into columns
   ansible.builtin.set_fact:

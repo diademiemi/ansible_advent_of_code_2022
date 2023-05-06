@@ -1,7 +1,7 @@
 ---
 - name: Split input into all pairs
   ansible.builtin.set_fact:
-    pairs: "{{ input | trim | split('\n') }}"
+    pairs: "{{ day4_input | trim | split('\n') }}"
 
 - name: Split pairs into the two assignments
   ansible.builtin.set_fact:

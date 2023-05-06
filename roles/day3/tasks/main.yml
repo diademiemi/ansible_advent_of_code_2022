@@ -1,7 +1,7 @@
 ---
 - name: Split input into separate rucksacks
   ansible.builtin.set_fact:
-    rucksacks: "{{ input | trim | split('\n') }}"
+    rucksacks: "{{ day3_input | trim | split('\n') }}"
 
 - name: Split the rucksacks into two halves
   tags: part1

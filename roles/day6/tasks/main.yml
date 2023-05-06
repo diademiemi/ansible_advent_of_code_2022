@@ -1,7 +1,7 @@
 ---
 - name: Split input into characters
   ansible.builtin.set_fact:
-    chars: "{{ input | split | list }}"
+    chars: "{{ day6_input | split | list }}"
 
 - name: Loop over every character for 4 characters
   tags: part1
@@ -31,3 +31,4 @@
   ansible.builtin.debug:
     msg: "{{ msg_pos }}"
 
+...

@@ -1,0 +1,26 @@
+---
+shape_points:
+  x: 1
+  y: 2
+  z: 3
+
+point_map:
+  x:
+    a: 3
+    b: 0
+    c: 6
+  y:
+    a: 6
+    b: 3
+    c: 0
+  z:
+    a: 0
+    b: 6
+    c: 3
+
+result_map:
+  x: 0
+  y: 3
+  z: 6
+
+...

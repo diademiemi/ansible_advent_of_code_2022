@@ -9,3 +9,6 @@
     - { role: day5, tags: ['day5'] }
     - { role: day6, tags: ['day6'] }
     - { role: day8, tags: ['day8'] }
+  
+  collections:
+    - diademiemi.advent_of_code_2022

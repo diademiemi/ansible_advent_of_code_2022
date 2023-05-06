@@ -7,7 +7,7 @@
     updates:
       - path: "stacks[{{ move_to | int }}]"
         value:
-          "{% if reverse %}{{ stack_from | default([]) | json_query(to_query) | reverse + stack_to | default([])}}{% else %}{{ stack_from | default([]) | json_query(to_query) + stack_to | default([])}}{% endif %}"
+          "{% if reverse %}{{ stack_from | default([]) | json_query(to_query) | reverse + stack_to | default([]) }}{% else %}{{ stack_from | default([]) | json_query(to_query) + stack_to | default([]) }}{% endif %}"
       - path: "stacks[{{ move_from | int }}]"
         value: "{{ stack_from | default([]) | json_query(from_query) }}"
   vars:

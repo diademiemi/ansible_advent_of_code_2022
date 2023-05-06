@@ -2,8 +2,8 @@
 
 - name: Split input into the two parts
   ansible.builtin.set_fact:
-    boxes_view: "{{ input | split('\n\n') | first }}"
-    procedure: "{{ input | split('\n\n') | last  }}"
+    boxes_view: "{{ day5_input | split('\n\n') | first }}"
+    procedure: "{{ day5_input | split('\n\n') | last  }}"
 
 - name: Split procedure into instructions
   ansible.builtin.set_fact:

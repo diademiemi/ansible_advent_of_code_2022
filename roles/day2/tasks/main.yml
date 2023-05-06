@@ -1,7 +1,7 @@
 ---
 - name: Split input into all games
   ansible.builtin.set_fact:
-    games_list: "{{ input | lower | trim | split('\n') }}"
+    games_list: "{{ day2_input | lower | trim | split('\n') }}"
 
 - name: Split games into the two players
   ansible.builtin.set_fact:
@@ -31,3 +31,5 @@
   tags: part2
   ansible.builtin.debug:
     msg: "{{ results_2 | sum }}"
+
+...
