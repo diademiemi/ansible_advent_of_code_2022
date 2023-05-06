@@ -1,16 +1,12 @@
 ---
-- name: Split input into characters
-  ansible.builtin.set_fact:
-    chars: "{{ day6_input | split | list }}"
-
 - name: Loop over every character for 4 characters
   tags: part1
   ansible.builtin.set_fact:
     packet_pos: "{{ item + 1 }}"
   vars:
-    prev_4: "{{ [input[item - 3], input[item - 2], input[item - 1], input[item]] }}"
+    prev_4: "{{ [day6_input[item - 3], day6_input[item - 2], day6_input[item - 1], day6_input[item]] }}"
   when: packet_pos is not defined and prev_4 | unique | length == 4
-  loop: "{{ range(3, input | trim | length) | list }}"
+  loop: "{{ range(3, day6_input | trim | length) | list }}"
 
 - name: ANSWER TO PART 1 | Return the position of the packet
   tags: part1
@@ -22,9 +18,10 @@
   ansible.builtin.set_fact:
     msg_pos: "{{ item + 1 }}"
   vars:
-    prev_14: "{{ [input[item - 13], input[item - 12], input[item - 11], input[item - 10], input[item - 9], input[item - 8], input[item - 7], input[item - 6], input[item - 5], input[item - 4], input[item - 3], input[item - 2], input[item - 1], input[item]] }}"
+    # not gonna bother making this prettier tbh
+    prev_14: "{{ [day6_input[item - 13], day6_input[item - 12], day6_input[item - 11], day6_input[item - 10], day6_input[item - 9], day6_input[item - 8], day6_input[item - 7], day6_input[item - 6], day6_input[item - 5], day6_input[item - 4], day6_input[item - 3], day6_input[item - 2], day6_input[item - 1], day6_input[item]] }}"
   when: msg_pos is not defined and prev_14 | unique | length == 14
-  loop: "{{ range(3, input | trim | length) | list }}"
+  loop: "{{ range(3, day6_input | trim | length) | list }}"
 
 - name: ANSWER TO PART 2 | Return the position of the message
   tags: part2
