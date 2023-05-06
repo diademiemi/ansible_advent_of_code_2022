@@ -10,22 +10,72 @@
 - name: Loop through every coordinate
   tags: part1
   ansible.builtin.set_fact:
-    visible_num: "{{ visible_num | default(0) | int + 1 }}"
-  when: 
-    item.0 == 0 or item.1 == 0 or
-    item.0 == rows | length - 1 or item.1 == rows[0] | length - 1 or
-    rows[item.0][item.1] | int > look_left | join(',') | map('int') | max or
-    rows[item.0][item.1] | int > look_right | join(',') | map('int') | max or
-    rows[item.0][item.1] | int > look_up | join(',') | map('int') | max or
-    rows[item.0][item.1] | int > look_down | join(',') | map('int') | max
+    visible_num: "{% if 
+      item.0 == 0 or item.1 == 0 or
+      item.0 == rows | length - 1 or item.1 == rows[0] | length - 1 or
+      rows[item.0][item.1] | int > look_left | map('int') | max or
+      rows[item.0][item.1] | int > look_right | map('int') | max or
+      rows[item.0][item.1] | int > look_up | map('int') | max or
+      rows[item.0][item.1] | int > look_down | map('int') | max
+      %}
+      {{ visible_num | default(0) | int + 1 }}
+      {% else %}
+      {{ visible_num | default(0) }}
+      {% endif %}"
+    max_score: "{{ [max_score | default(0) | int, score | int] | max }}"
   vars:
-    look_left: "{% for i in range(item.1, -1, -1) %}{% if i != item.1 %}{{ rows[item.0][i] }}{% if i | int != 0 %},{% endif %}{% endif %}{% endfor %}"
-    look_right: "{% for i in range(item.1, rows[0] | length) %}{% if i != item.1 %}{{ rows[item.0][i] }}{% if i | int != rows[0] | length - 1 %},{% endif %}{% endif %}{% endfor %}"
-    look_up: "{% for i in range(item.0, -1, -1) %}{% if i != item.0 %}{{ rows[i][item.1] }}{% if i | int != 0 %},{% endif %}{% endif %}{% endfor %}"
-    look_down: "{% for i in range(item.0, rows | length) %}{% if i != item.0 %}{{ rows[i][item.1] }}{% if i | int != rows | length - 1 %},{% endif %}{% endif %}{% endfor %}"
+    look_up: "{{ rows[0:item.0] | map(attribute=item.1) | map('int') | reverse }}" # Reverse order to make scenic score easier
+    look_left: "{{ rows[item.0][0:item.1] | map('int') | reverse }}" # Reverse order to make scenic score easier
+    look_down: "{{ rows[item.0 + 1:rows | length] | map(attribute=item.1) | map('int') }}"
+    look_right: "{{ rows[item.0][item.1 + 1:rows[0] | length] | map('int')}}"
+    # Get amount of trees that are NOT higher. Stop counting after one is found
+    score_up: "{%- set ns = namespace(score = 0, blocked = false) -%}\
+      {% for i in look_up %}\
+      {% if not ns.blocked%}\
+      {%- set ns.score = ns.score + 1 -%}\
+      {% if i | int >= rows[item.0][item.1] | int %}\
+      {%- set ns.blocked = true -%}\
+      {% endif %}
+      {% else %}{%- set ns.blocked = true -%}\
+      {% endif %}{% endfor %}{{ ns.score | default | int }}"
+    score_left: "{%- set ns = namespace(score = 0, blocked = false) -%}\
+      {% for i in look_left %}\
+      {% if not ns.blocked%}\
+      {%- set ns.score = ns.score + 1 -%}\
+      {% if i | int >= rows[item.0][item.1] | int %}\
+      {%- set ns.blocked = true -%}\
+      {% endif %}
+      {% else %}{%- set ns.blocked = true -%}\
+      {% endif %}{% endfor %}{{ ns.score | default | int }}"
+    score_down: "{%- set ns = namespace(score = 0, blocked = false) -%}\
+      {% for i in look_down %}\
+      {% if not ns.blocked%}\
+      {%- set ns.score = ns.score + 1 -%}\
+      {% if i | int >= rows[item.0][item.1] | int %}\
+      {%- set ns.blocked = true -%}\
+      {% endif %}
+      {% else %}{%- set ns.blocked = true -%}\
+      {% endif %}{% endfor %}{{ ns.score | default | int }}"
+    score_right: "{%- set ns = namespace(score = 0, blocked = false) -%}\
+      {% for i in look_right %}\
+      {% if not ns.blocked%}\
+      {%- set ns.score = ns.score + 1 -%}\
+      {% if i | int >= rows[item.0][item.1] | int %}\
+      {%- set ns.blocked = true -%}\
+      {% endif %}
+      {% else %}{%- set ns.blocked = true -%}\
+      {% endif %}{% endfor %}{{ ns.score | default | int }}"
+    score: "{{ score_left | int * score_right | int * score_up | int * score_down | int }}"
   loop: "{{ range(0, rows | length) | list | product(range(0, rows[0] | length)) | list }}"
 
 - name: ANSWER TO PART 1 | Return the number of visible trees
   tags: part1
   ansible.builtin.debug:
     msg: "{{ visible_num }}"
+
+- name: ANSWER TO PART 2 | Return the highest scenic score
+  tags: part2
+  ansible.builtin.debug:
+    msg: "{{ max_score }}"
+
+...
