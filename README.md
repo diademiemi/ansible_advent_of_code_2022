@@ -5,7 +5,7 @@ This repository contains my solutions to the [Advent of Code 2022](https://adven
 
 To challenge myself a lot, I decided to write these in my golden hammer, [Ansible](https://www.ansible.com/). I will regret this! :​D  
 
-For context, Ansible is a configuration management tool that is used to configure servers. It is not meant to be used as a programming language and it is not very good at it. It does however come with a strong (in-line) Jinja2 templating engine and it exposes some of the Python objects it uses internally, so it is possible to do some programming with it. The Python methods don't end up being very useful since they're hard to chain together and they don't return anything useful aside from slightly manipulating the data, something Ansible and Jinja2 filters are much better at.   
+For context, Ansible is a configuration management tool that is used to configure servers. It is not meant to be used as a programming language and it is not very good at it. It does however come with a strong (in-line) Jinja2 templating engine and it exposes some of the Python objects it uses internally, so it is possible to do some programming with it. The Python methods don't end up being very useful since they're hard to chain together and they don't return anything useful aside from slightly manipulating the data, something Ansible and Jinja2 filters are much better at.  
 
 ## [Goals](#goals)
 
@@ -22,10 +22,10 @@ Side note, GitHub Copilot is the one adding these ":​D" at the end of my sente
 ## [Results](#results)
 Day | Name | Stars | Reaction | Time to run
 ----|------|:-----:|:---------:|-----------:
-[1](./roles/day1/tasks/main.yml) | [Calorie Counting](https://adventofcode.com/2022/day/1) | ⭐ ⭐ | 🤪 | 10s
-[2](./roles/day2/tasks/main.yml) | [Rock Paper Scissors](https://adventofcode.com/2022/day/2) | ⭐ ⭐ | 😝 | 2m 18s
-[3](./roles/day3/tasks/main.yml) | [Rucksack Reorganization](https://adventofcode.com/2022/day/3) | ⭐ ⭐ | 😏 | 35s
-[4](./roles/day4/tasks/main.yml) | [Camp Cleanup](https://adventofcode.com/2022/day/4) | ⭐ ⭐ | 😨 |  9m 26s
+[1](./roles/day1/tasks/main.yml) | [Calorie Counting](https://adventofcode.com/2022/day/1) | ⭐ ⭐ | 🤪 | 6s
+[2](./roles/day2/tasks/main.yml) | [Rock Paper Scissors](https://adventofcode.com/2022/day/2) | ⭐ ⭐ | 😝 | 1m 34s
+[3](./roles/day3/tasks/main.yml) | [Rucksack Reorganization](https://adventofcode.com/2022/day/3) | ⭐ ⭐ | 😏 | 22s
+[4](./roles/day4/tasks/main.yml) | [Camp Cleanup](https://adventofcode.com/2022/day/4) | ⭐ ⭐ | 😨 |  7m 9s
 [5](./roles/day5/tasks/main.yml) | [Supply Stacks](https://adventofcode.com/2022/day/5) | ⭐ ⭐ | 😱 | 6m 24s
 [6](./roles/day6/tasks/main.yml) | [Tuning Trouble](https://adventofcode.com/2022/day/6) | ⭐ ⭐ | 😌 | 1m 31s
 [7](./roles/day7/tasks/main.yml) | [No Space Left On Device](https://adventofcode.com/2022/day/7) | | 🤯 |
@@ -48,7 +48,9 @@ Day | Name | Stars | Reaction | Time to run
 [24](./roles/day24/tasks/main.yml) | [Blizzard Basin](https://adventofcode.com/2022/day/24) | | |
 [25](./roles/day25/tasks/main.yml) | [Full of Hot Air](https://adventofcode.com/2022/day/25) | | |
 
-Times are for the real inputs, on a well cooled Ryzen 5600X with 32GB of RAM. I do not expect hardware to be a limiting factor for these times, Ansible seems to be completely single threaded and uses very little RAM.  
+Times are for the real inputs, on a Ryzen 9 7950X with 64GB of CL30 RAM.  
+I had previously run some of these on a Ryzen 5 5600X, it seems the 7950X is about 33% faster.  
+
 The "Reaction" column is how I felt about the puzzle and how hellish it was to solve in Ansible.  
 
 ## [How to run](#how-to-run)
@@ -73,7 +75,7 @@ For example, to run only day 1, you can run `ansible-playbook playbook.yml --tag
 
 ## [Info](#info)
 You can find more on Ansible filters here: [Ansible Filters documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html).  
-This is not a comprehensive list, and Ansible Collections can include more filters. Check [#goals](#goals) for which filters I will use.    
+This is not a comprehensive list, and Ansible Collections can include more filters. Check [#goals](#goals) for which filters I will use.  
 
 The following Jinja2 Filters are also available: [List of Jinja2 filters](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-builtin-filters).  
 

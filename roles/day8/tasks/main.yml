@@ -10,7 +10,7 @@
 - name: Loop through every coordinate
   tags: part1
   ansible.builtin.set_fact:
-    visible_num: "{% if 
+    visible_num: "{% if
       item.0 == 0 or item.1 == 0 or
       item.0 == rows | length - 1 or item.1 == rows[0] | length - 1 or
       rows[item.0][item.1] | int > look_left | map('int') | max or

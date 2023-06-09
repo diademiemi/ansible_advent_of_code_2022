@@ -2,13 +2,12 @@
 - name: Advent of Code 2022
   hosts: localhost
   roles:
-    - { role: day1, tags: ['day1'] }
-    - { role: day2, tags: ['day2'] }
-    - { role: day3, tags: ['day3'] }
-    - { role: day4, tags: ['day4'] }
-    - { role: day5, tags: ['day5'] }
-    - { role: day6, tags: ['day6'] }
-    - { role: day8, tags: ['day8'] }
-  
-  collections:
-    - diademiemi.advent_of_code_2022
+    - { role: diademiemi.advent_of_code_2022.day1, tags: ['day1'] }
+    - { role: diademiemi.advent_of_code_2022.day2, tags: ['day2'] }
+    - { role: diademiemi.advent_of_code_2022.day3, tags: ['day3'] }
+    - { role: diademiemi.advent_of_code_2022.day4, tags: ['day4'] }
+    - { role: diademiemi.advent_of_code_2022.day5, tags: ['day5'] }
+    - { role: diademiemi.advent_of_code_2022.day6, tags: ['day6'] }
+    - { role: diademiemi.advent_of_code_2022.day8, tags: ['day8'] }
+
+...
